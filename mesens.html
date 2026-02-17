@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Mesens — заявка в тестеры</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+
+        body {
+            background: #0a0a0a;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        /* главное окно — как в лоадере */
+        .window {
+            width: 700px;
+            max-width: 100%;
+            background: #1e1e1e;
+            border: 1px solid #3a3a3a;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+            position: relative;
+        }
+
+        /* оранжевая линия сверху */
+        .orange-line {
+            height: 2px;
+            background: linear-gradient(90deg, #c85a00, #ff9a00, #c85a00);
+            width: 100%;
+        }
+
+        .content {
+            padding: 20px 25px 25px 25px;
+        }
+
+        /* хедер как в левой панели лоадера */
+        .game-header {
+            display: flex;
+            gap: 15px;
+            background: #252525;
+            padding: 12px 15px;
+            border: 1px solid #3a3a3a;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        /* SVG логотип вместо смайлика */
+        .logo-svg {
+            width: 52px;
+            height: 52px;
+            background: #2c2c2c;
+            border: 1px solid #3a3a3a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .game-title h2 {
+            color: #c8b400;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .game-title .small {
+            color: #585858;
+            font-size: 11px;
+            margin-top: 4px;
+        }
+
+        /* панель Options (заголовок формы) */
+        .options-header {
+            background: #252525;
+            border: 1px solid #3a3a3a;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .options-header span {
+            color: #c0c0c0;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .options-header .close {
+            color: #585858;
+            font-size: 20px;
+            cursor: default;
+        }
+
+        /* элементы формы */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #c0c0c0;
+            font-size: 11px;
+            margin-bottom: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        .form-group label span {
+            color: #cc4444;
+            margin-left: 2px;
+        }
+
+        input, textarea {
+            width: 100%;
+            background: #2c2c2c;
+            border: 1px solid #3a3a3a;
+            color: #c0c0c0;
+            font-size: 12px;
+            padding: 8px 10px;
+            outline: none;
+            transition: all 0.2s;
+            font-family: 'Consolas', monospace;
+        }
+
+        input:focus, textarea:focus {
+            border-color: #e07b00;
+            background: #2a2a2a;
+        }
+
+        textarea {
+            min-height: 70px;
+            resize: vertical;
+        }
+
+        /* чекбокс как в лоадере */
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 18px 0 20px;
+        }
+
+        .checkbox-row input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #e07b00;
+            background: #2c2c2c;
+            border: 1px solid #3a3a3a;
+        }
+
+        .checkbox-row label {
+            color: #585858;
+            font-size: 11px;
+        }
+
+        .checkbox-row label:hover {
+            color: #c0c0c0;
+        }
+
+        /* кнопки — стиль лоадера */
+        .button-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            background: #2c2c2c;
+            border: 1px solid #3a3a3a;
+            color: #c0c0c0;
+            font-size: 12px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Consolas', monospace;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background: #363636;
+            border-color: #e07b00;
+            color: white;
+        }
+
+        .btn:active {
+            background: #1a1a1a;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            border-color: #3a3a3a;
+        }
+
+        /* статусное поле как в лоадере */
+        .status-panel {
+            margin-top: 20px;
+            background: #1e1e1e;
+            border: 1px solid #3a3a3a;
+            padding: 8px 12px;
+            min-height: 60px;
+        }
+
+        .status-header {
+            color: #c0c0c0;
+            font-size: 10px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        #status {
+            color: #c0c0c0;
+            font-size: 11px;
+            line-height: 1.5;
+            word-break: break-word;
+            font-family: 'Consolas', monospace;
+        }
+
+        .status-success { color: #7dc253 !important; }
+        .status-error { color: #cc4444 !important; }
+        .status-warning { color: #c8b400 !important; }
+
+        /* разделители */
+        .separator {
+            height: 1px;
+            background: #3a3a3a;
+            margin: 15px 0 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="window">
+    <div class="orange-line"></div>
+    <div class="content">
+        <!-- хедер с SVG логотипом -->
+        <div class="game-header">
+            <div class="logo-svg">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" fill="#e07b00"/>
+                    <circle cx="12" cy="12" r="5" fill="#c85a00"/>
+                    <path d="M12 8v8M8 12h8" stroke="#1e1e1e" stroke-width="1.5"/>
+                </svg>
+            </div>
+            <div class="game-title">
+                <h2>MESENS</h2>
+                <div class="small">beta tester application</div>
+            </div>
+        </div>
+
+        <!-- заголовок формы -->
+        <div class="options-header">
+            <span>🔹 заполните анкету</span>
+            <div class="close">⨯</div>
+        </div>
+
+        <!-- форма -->
+        <form id="applicationForm">
+            <div class="form-group">
+                <label>Свой ник <span>*</span></label>
+                <input type="text" id="username" placeholder="Например: xXx_Mesens_xXx" required>
+            </div>
+
+            <div class="form-group">
+                <label>Пароль <span>*</span></label>
+                <input type="password" id="password" placeholder="Минимум 6 символов" required>
+            </div>
+
+            <div class="form-group">
+                <label>Почему вы хотите стать тестером? <span>*</span></label>
+                <textarea id="whyTester" placeholder="Напишите пару предложений..." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Почему именно Mesens? <span>*</span></label>
+                <textarea id="whyMesens" placeholder="Что вас привлекло?" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Какой у вас опыт игры с читами? <span>*</span></label>
+                <textarea id="experience" placeholder="Расскажите о вашем опыте..." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Какие вы использовали читы до нас?</label>
+                <textarea id="previousCheats" placeholder="Перечислите через запятую или напишите 'никакие'"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Хотите ли чтобы чит стал платным? (с учётом что каждый месяц будет набор бета тестеров с бесплатной бесконечной подпиской) <span>*</span></label>
+                <textarea id="paidOpinion" placeholder="Ваше мнение..." required></textarea>
+            </div>
+
+            <!-- чекбокс как в лоадере -->
+            <div class="checkbox-row">
+                <input type="checkbox" id="agree" checked>
+                <label for="agree">Я согласен на обработку данных и понимаю, что решение принимает администрация</label>
+            </div>
+
+            <!-- кнопки -->
+            <div class="button-row">
+                <button type="button" class="btn" id="submitBtn" onclick="submitApplication()">Отправить заявку</button>
+                <button type="button" class="btn" onclick="window.close()">Выход</button>
+            </div>
+        </form>
+
+        <!-- статусная панель как в лоадере -->
+        <div class="status-panel">
+            <div class="status-header">📋 status</div>
+            <div id="status">Ожидание ввода данных...</div>
+        </div>
+
+        <!-- маленький разделитель и подпись -->
+        <div class="separator"></div>
+        <div style="color:#585858; font-size:9px; text-align:right; margin-top:5px;">
+            Mesens loader interface • application form v1.0
+        </div>
+    </div>
+</div>
+
+<script>
+    // ⚠️ ВАШ ТОКЕН (сохранён в коде, но больше нигде не публикуйте!)
+    const GITHUB_TOKEN = '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';
+    const REPO_OWNER = 'andreir3241sdsfq1';
+    const REPO_NAME = 'acc';
+    
+    // Функция показа статуса
+    function setStatus(message, type = 'info') {
+        const statusEl = document.getElementById('status');
+        statusEl.textContent = message;
+        statusEl.className = '';
+        if (type === 'success') statusEl.classList.add('status-success');
+        else if (type === 'error') statusEl.classList.add('status-error');
+        else if (type === 'warning') statusEl.classList.add('status-warning');
+    }
+
+    // Функция отправки формы
+    async function submitApplication() {
+        // Собираем данные
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const whyTester = document.getElementById('whyTester').value.trim();
+        const whyMesens = document.getElementById('whyMesens').value.trim();
+        const experience = document.getElementById('experience').value.trim();
+        const previousCheats = document.getElementById('previousCheats').value.trim() || 'не указано';
+        const paidOpinion = document.getElementById('paidOpinion').value.trim();
+        const agree = document.getElementById('agree').checked;
+
+        // Валидация
+        if (!username || !password || !whyTester || !whyMesens || !experience || !paidOpinion) {
+            setStatus('❌ Заполните все обязательные поля!', 'error');
+            return;
+        }
+
+        if (password.length < 6) {
+            setStatus('❌ Пароль должен быть минимум 6 символов', 'error');
+            return;
+        }
+
+        if (!agree) {
+            setStatus('❌ Необходимо согласие на обработку данных', 'error');
+            return;
+        }
+
+        // Блокируем кнопку
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true;
+        btn.textContent = 'Отправка...';
+        setStatus('🔄 Отправка заявки...', 'warning');
+
+        // Формируем содержимое файла
+        const timestamp = new Date().toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' });
+        const fileContent = `🔹 ЗАЯВКА НА ТЕСТИРОВАНИЕ MESENS 🔹
+══════════════════════════════
+🕒 Дата и время: ${timestamp}
+👤 Никнейм: ${username}
+🔑 Пароль: ${password}
+══════════════════════════════
+
+❓ Почему хотите стать тестером?
+${whyTester}
+
+❓ Почему именно Mesens?
+${whyMesens}
+
+❓ Опыт игры с читами:
+${experience}
+
+❓ Использованные читы:
+${previousCheats}
+
+❓ Мнение о платной модели:
+${paidOpinion}
+
+══════════════════════════════
+✅ Согласие на обработку: ДА
+📌 Статус: ожидает рассмотрения`;
+
+        try {
+            // 1. Проверяем, существует ли уже файл с таким ником
+            let sha = null;
+            const filePath = `applications/${username}.txt`; // сохраняем в папку applications
+
+            const getResponse = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${filePath}`, {
+                headers: {
+                    'Authorization': `token ${GITHUB_TOKEN}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            });
+
+            if (getResponse.status === 200) {
+                const fileData = await getResponse.json();
+                sha = fileData.sha;
+                // Файл существует — спросим пользователя
+                if (!confirm('Заявка с таким ником уже существует. Перезаписать?')) {
+                    setStatus('❌ Отменено пользователем', 'error');
+                    btn.disabled = false;
+                    btn.textContent = 'Отправить заявку';
+                    return;
+                }
+            } else if (getResponse.status !== 404) {
+                // Какая-то другая ошибка
+                const err = await getResponse.json();
+                throw new Error(err.message || 'Ошибка проверки файла');
+            }
+
+            // 2. Кодируем содержимое в base64 (с поддержкой русского)
+            const encodedContent = btoa(unescape(encodeURIComponent(fileContent)));
+
+            // 3. Отправляем в GitHub
+            const putResponse = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${filePath}`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${GITHUB_TOKEN}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/vnd.github.v3+json'
+                },
+                body: JSON.stringify({
+                    message: `Новая заявка от ${username}`,
+                    content: encodedContent,
+                    sha: sha, // если файла нет — sha будет null, создастся новый
+                    branch: 'main'
+                })
+            });
+
+            if (putResponse.ok) {
+                setStatus(`✅ Заявка от ${username} успешно отправлена! Ожидайте решения администрации.`, 'success');
+                // Очищаем только пароль, остальное можно оставить
+                document.getElementById('password').value = '';
+                // Можно также очистить всё, если хотите:
+                // document.getElementById('applicationForm').reset();
+            } else {
+                const error = await putResponse.json();
+                throw new Error(error.message || 'Ошибка при сохранении');
+            }
+
+        } catch (error) {
+            console.error('GitHub API Error:', error);
+            setStatus(`❌ Ошибка: ${error.message}`, 'error');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Отправить заявку';
+        }
+    }
+
+    // Обработка нажатия Enter (не отправляет форму случайно)
+    document.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+            e.preventDefault();
+        }
+    });
+</script>
+</body>
+</html>
